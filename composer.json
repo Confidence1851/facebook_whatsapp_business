@@ -1,6 +1,6 @@
 
 {
-    "name": "admin/fbw",
+    "name": "confidence/facebook_whatsapp_business",
     "description": "Facebook Whatsapp Business Package",
     "type": "library",
     "license": "MIT",
