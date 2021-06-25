@@ -1,0 +1,19 @@
+
+{
+    "name": "admin/fbw",
+    "description": "Facebook Whatsapp Business Package",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Confidence Ugolo",
+            "email": "ugoloconfidence@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": {"Confidence\\FacebookWhatsappBusiness\\": "src/"}
+    },
+    "require": {}
+}
+
