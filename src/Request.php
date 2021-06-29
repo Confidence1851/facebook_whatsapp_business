@@ -55,9 +55,9 @@ class Request
                 $error_msg = curl_error($curl);
                 throw new Exception($error_msg);
             }
-
+            $code  = curl_getinfo($curl, CURLINFO_HTTP_CODE);
             curl_close($curl);
-            return Response::success(json_decode($response));
+            return Response::success(json_decode($response) , $code);
         } catch (Exception $e) {
             curl_close($curl);
             return Response::failed("An error occurred!" , $e->getMessage());

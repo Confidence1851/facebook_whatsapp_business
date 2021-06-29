@@ -9,12 +9,13 @@ class Response {
      * @required $data
      * string $message
      */
-    public static function success($data , $message = null){
+    public static function success($data , $code = 200, $message = null){
         return [
             "success" => true,
             "data" => $data,
             "message" => $message,
-            "error" => null
+            "error" => null,
+            "code" => $code
         ];
     }
 
@@ -29,7 +30,8 @@ class Response {
             "success" => false,
             "data" => null,
             "message" => $message,
-            "error" => $error
+            "error" => $error,
+            "code" => 403,
         ];
     }
     
