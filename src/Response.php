@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Confidence\FacebookWhatsappBusiness;
 
@@ -25,16 +25,16 @@ class Response {
      * @required $message
      * string $error
      */
-    public static function failed($message , $error){
+    public static function failed($message , $error = null , $code = 503){
         return [
             "success" => false,
             "data" => null,
             "message" => $message,
             "error" => $error,
-            "status_code" => 403,
+            "status_code" => $code,
         ];
     }
-    
+
 
 }
 

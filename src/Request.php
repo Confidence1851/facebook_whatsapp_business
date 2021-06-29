@@ -49,6 +49,8 @@ class Request
                 CURLOPT_HTTPHEADER => $this->headers
             ));
 
+            // dd($this->headers);
+
 
             $response = curl_exec($curl);
             if (curl_errno($curl)) {

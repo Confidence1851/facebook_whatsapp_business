@@ -32,11 +32,11 @@ class Auth extends Base
 
         if($response["success"] && !empty($data = $response["data"] ?? null)){
             $response["data"] = [
-                "token" => $data->users->token,
-                "expires_after" => $data->users->expires_after,
+                "token" => $data->users[0]->token,
+                "expires_after" => $data->users[0]->expires_after,
             ];
         }
-       
+
         return $response;
     }
 }
