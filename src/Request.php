@@ -15,7 +15,7 @@ class Request
 
     public function url($endpoint)
     {
-        $this->url = $this->baseUrlEndpoint + $endpoint;
+        $this->url = $this->baseUrlEndpoint . "" . $endpoint;
         return $this;
     }
 
