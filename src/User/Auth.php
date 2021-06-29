@@ -30,7 +30,13 @@ class Auth extends Base
                 "new_password" => $newPassword
             ]);
 
-    
+        if($response["success"] && !empty($data = $response["data"] ?? null)){
+            $response["data"] = [
+                "token" => $data->users->token,
+                "expires_after" => $data->users->expires_after,
+            ];
+        }
+       
         return $response;
     }
 }
