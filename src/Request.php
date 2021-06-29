@@ -2,6 +2,8 @@
 
 namespace Confidence\FacebookWhatsappBusiness;
 
+use Exception;
+
 class Request
 {
     private $baseUrlEndpoint, $curl, $url, $method, $headers;
@@ -23,7 +25,7 @@ class Request
         return $this;
     }
 
-    public function headers($headers)
+    public function headers(array $headers)
     {
         $this->headers = $headers;
         return $this;
@@ -31,30 +33,34 @@ class Request
 
     public  function process($formData = null)
     {
+        try {
+            $curl = $this->curl;
 
-        $curl = $this->curl;
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => $this->url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => strtoupper($this->method),
-            CURLOPT_POSTFIELDS => json_encode($formData),
-            CURLOPT_HTTPHEADER => $this->headers
-        ));
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => $this->url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => strtoupper($this->method),
+                CURLOPT_POSTFIELDS => json_encode($formData),
+                CURLOPT_HTTPHEADER => $this->headers
+            ));
 
 
-        $response = curl_exec($curl);
+            $response = curl_exec($curl);
+            if (curl_errno($curl)) {
+                $error_msg = curl_error($curl);
+                throw new Exception($error_msg);
+            }
 
-        if(curl_errno($curl)){
-            $error_msg = curl_error($curl);
+            curl_close($curl);
+            return Response::success(json_decode($response));
+        } catch (Exception $e) {
+            curl_close($curl);
+            return Response::failed("An error occurred!" , $e->getMessage());
         }
-
-        curl_close($curl);
-        return json_decode($response);
     }
 }

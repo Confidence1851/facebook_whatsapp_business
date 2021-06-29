@@ -14,25 +14,23 @@ class Auth extends Base
      * Log an admin into the account
      * @required string $newPassword
      */
-    public function loginAdmin($newPassword)
+    public function loginAdmin($username, $password, $newPassword)
     {
 
         $request = new Request($this->baseUrlEndpoint);
+        $basicToken = base64_encode($username.":".$password);
 
         $response = $request->url(Endpoints::LOGIN)
             ->method("POST")
-            // ->headers()
+            ->headers([
+                "Content-Type: application/json",
+                "Authorization: Basic $basicToken"
+            ])
             ->process([
                 "new_password" => $newPassword
             ]);
 
-        $returnData = null;
-        if ($response) {
-            $returnData = Response::success($response);
-        } else {
-            $returnData = Response::failed(null, null);
-        }
-
-        return $returnData;
+    
+        return $response;
     }
 }
