@@ -15,7 +15,7 @@ class Response {
             "data" => $data,
             "message" => $message,
             "error" => null,
-            "code" => $code
+            "status_code" => $code
         ];
     }
 
@@ -31,7 +31,7 @@ class Response {
             "data" => null,
             "message" => $message,
             "error" => $error,
-            "code" => 403,
+            "status_code" => 403,
         ];
     }
     
