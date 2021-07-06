@@ -11,64 +11,93 @@ class Message extends Base
 {
 
    private $template;
-   private $textBody;
-   private $documentBody;
-   private $audioBody;
+   private $templateHeader;
+   private $templateBody;
 
-   public function setTemplate(
+   /**
+    * Build a template body after setting header and body
+    * @param string $namespace
+    * @param string $name
+    * @param array $language
+    */
+   public function buildTemplate(
       $namespace,
       $name,
-      $type,
-      array $params,
       array $language = [
          "policy" => "deterministic",
-         "code" => "en_US"
+         "code" => "en"
       ]
    ) {
+      $components = [];
+
+      if (!empty($key = $this->templateHeader)) {
+         $components[] = $key;
+      }
+
+      if (!empty($key = $this->templateBody)) {
+         $components[] = $key;
+      }
+
       $this->template = [
          "namespace" => $namespace,
          "name" => $name,
          "language" => $language,
-         "components" => [
+         "components" => $components
+      ];
+      return $this;
+   }
+
+   /**
+    * Build a template body after setting header and body
+    * @param string $type e.g document , image , video , audio
+    * @param string $link
+    * @param string $fileName
+    */
+   public function setTemplateHeader($type, $link , $fileName)
+   {
+      $this->templateHeader = [
+         "type" => "header",
+         "parameters" => [
             [
                "type" => $type,
-               "parameters" => $params
+               $type => [
+                  "link" => $link,
+                  // "provider" => [
+                  //    "name" => $provider
+                  // ],
+                  "filename" => $fileName
+               ]
+
             ]
          ]
       ];
       return $this;
    }
 
-   public function setTextBody($value)
+   /**
+    * Build a template body after setting header and body
+    * @param string $type e.g text
+    * @param array $parameters
+    */
+   public function setTemplateBody($type, array $parameters)
    {
-      $this->textBody = $value;
-      return $this;
-   }
-
-   public function setDocumentBody($value)
-   {
-      $this->documentBody = $value;
-      return $this;
-   }
-
-   public function setAudioBody($value)
-   {
-      $this->audioBody = $value;
+      $this->templateBody = [
+         "type" => $type,
+         "parameters" => $parameters
+      ];
       return $this;
    }
 
 
    /**
-    * Log an admin into the account
-    * @required string $newPassword
+    * Send non template message to a contact
+    * @param string $contact
+    * @param string $message
     */
 
    public function send($contact, string $message)
    {
-
-
       $request = new Request($this->baseUrlEndpoint);
-
       $response = $request->url(Endpoints::MESSAGES)
          ->method("POST")
          ->headers([
@@ -96,12 +125,14 @@ class Message extends Base
    }
 
 
+   /**
+    * Send a template message to a contact after setting template header and body
+    * @param string $contact
+    */
    public function sendWithTemplate($contact)
    {
 
-
       $request = new Request($this->baseUrlEndpoint);
-
       $response = $request->url(Endpoints::MESSAGES)
          ->method("POST")
          ->headers([
@@ -113,15 +144,6 @@ class Message extends Base
             "type" => "template",
             "template" => $this->template
          ]);
-
-      if ($response["success"] && !empty($data = $response["data"] ?? null)) {
-         $messageIds = [];
-         foreach ($data->messages as $message) {
-            $messageIds[] = (array) $message;
-         }
-         $response["data"] = $messageIds;
-      }
-
       return $response;
    }
 }
