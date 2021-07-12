@@ -112,15 +112,6 @@ class Message extends Base
                "body" => $message
             ]
          ]);
-
-      if ($response["success"] && !empty($data = $response["data"] ?? null)) {
-         $parsedContacts = [];
-         foreach ($data->contacts as $contact) {
-            $parsedContacts[] = (array) $contact;
-         }
-         $response["data"] = $parsedContacts;
-      }
-
       return $response;
    }
 
