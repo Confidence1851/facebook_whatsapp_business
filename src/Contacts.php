@@ -36,14 +36,6 @@ class Contacts extends Base
                 "contacts" => $contacts
             ]);
 
-        if($response["success"] && !empty($data = $response["data"]->contacts ?? null)){
-            $parsedContacts = [];
-            foreach ($data->contacts as $contact) {
-               $parsedContacts[] = (array) $contact;
-            }
-            $response["data"] = $parsedContacts;
-        }
-
         return $response;
     }
 }
